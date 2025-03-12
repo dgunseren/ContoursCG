@@ -94,9 +94,4 @@ double findAngles(const Point& point,std::vector<double>& given_center) {
   return 3*M_PI*0.5+asinVal;
   }
 
-
-
-
-
-
 }
