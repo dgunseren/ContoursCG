@@ -14,6 +14,34 @@ using Segment = std::variant<LineSegment, ArcL>;
 // Define the Contour class
 class Contour {
 public:
+    // Default constructor
+    Contour() = default;
+
+    // Copy constructor
+    Contour(const Contour& other)
+        : segments(other.segments), Points(other.Points) {}
+
+    // Copy assignment operator
+    Contour& operator=(const Contour& other) {
+        if (this != &other) {
+            segments = other.segments;
+            Points = other.Points;
+        }
+        return *this;
+    }
+
+    // Move constructor
+    Contour(Contour&& other) noexcept
+        : segments(std::move(other.segments)), Points(std::move(other.Points)) {}
+
+    // Move assignment operator
+    Contour& operator=(Contour&& other) noexcept {
+        if (this != &other) {
+            segments = std::move(other.segments);
+            Points = std::move(other.Points);
+        }
+        return *this;
+    }
     // Add a line segment to the contour
     void addLineSegment(const Point& start, const Point& end) {
         segments.emplace_back(LineSegment{start, end});
