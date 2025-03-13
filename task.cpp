@@ -80,15 +80,19 @@ public:
         if (Points.size() < 2) return false;
 
         for (size_t i = 0; i < Points.size() - 1; ++i) {
+
             if (i%2 ==1) {
-                double distance = sqrt(pow(Points[i].x - Points[i + 1].x, 2) + pow(Points[i].y - Points[i + 1].y, 2));
+                double dx = Points[i].x - Points[i + 1].x;
+                double dy = Points[i].y - Points[i + 1].y;
+                double distance = sqrt(pow(dx, 2) + pow(dy, 2));
                 if (distance > epsilon) {
                     return false;
                 }
-                return true;
-            }
-        }
 
+
+            }
+        };
+return true;
     }
 
 private:
@@ -143,44 +147,45 @@ int main() {
     std::vector<Contour> contours;
 
     // ✅ Create contours
-    Contour contour1, contour2, contour3, contour4,contour5 ;
-    contour1.addLineSegment({4.0005, 2.0005}, {6.0005, 2.0005});
-    contour1.addArc({6.0005, 2.0005}, {10.0005, 6.0005}, 4.0005, 0.0005, true);
-    contour1.addArc({10.0005, 6.0005}, {14.0005, 2.0005}, 0.0005, -3.9995, true);
-    contour1.addLineSegment({14.0005, 2.0005},{3,3});
-    contour1.addLineSegment({4, 3},{5,5});
-    //contour1.addSegmentAtIndex(2,LineSegment{{3, 3},{5,5}}) ;
+    Contour contour1;
+
+    contour1.addLineSegment({11,12},{13,14});
+    contour1.addLineSegment({13,14},{17,18});
+    contour1.addArc({17,18},{19,20},5,5,true);
+
+
     contours.push_back(contour1);
 
-    contour2.addLineSegment({0, 0}, {0, 1});
-    contour2.addLineSegment({0, 1}, {2, 1});
-    contour2.addLineSegment({2, 1}, {5, 1});
+    Contour contour2;
+
+    contour2.addLineSegment({11,12},{13,14});
+    contour2.addLineSegment({13,14},{17,18});
+    contour2.addArc({170,18},{19,20},5,5,true);
+
 
     contours.push_back(contour2);
 
-    contour3.addLineSegment({0, 0}, {200, 100});
-    contour3.addLineSegment({200, 100}, {-5, -9});
+    Contour contour3;
+
+    contour3.addLineSegment({11,12},{13,14});
+    contour3.addLineSegment({13,14},{17,18});
+    contour3.addArc({17,18},{19,20},5,5,true);
+    contour3.addArc({19,20},{55,46},5,5,true);
+    contour3.addLineSegment({55,46},{117,118});
+
+
     contours.push_back(contour3);
 
-    contour4.addLineSegment({10, 10}, {15, 15});
-    contour4.addArc({15445, 15}, {20, 20}, 3, 3, false);
-    contours.push_back(contour4);
 
-    contour5.addLineSegment({4.0005, 2.0005}, {6.0005, 2.0005});
-    contour5.addArc({6.0005, 2.0005}, {10.0005, 6.0005}, 4.0005, 0.0005, true);
-    contour5.addArc({10.0005, 6.0005}, {14.0005, 2.0005}, 0.0005, -3.9995, true);
-    contour5.addLineSegment({14.0005, 2.0005},{3,3});
-    contour5.addLineSegment({1454544, 3},{5,5});
-    //contour1.addSegmentAtIndex(2,LineSegment{{3, 3},{5,5}}) ;
-    contours.push_back(contour5);
+
 
     // ✅ Use `std::vector` instead of malloc
     std::vector<pthread_t> thread_handles(2);
     std::vector<ThreadData> thread_data(2);
 
     // ✅ Assign explicit user-defined thread IDs
-    thread_data[0] = {1, &contours, 0.0000001};  // Valid contours
-    thread_data[1] = {2, &contours, 0.0000001};  // Invalid contours
+    thread_data[0] = {1, &contours, 0.01};  // Valid contours
+    thread_data[1] = {2, &contours, 0.01};  // Invalid contours
 
     // ✅ Create separate threads for valid and invalid contours
     pthread_create(&thread_handles[0], nullptr, processValidContours, &thread_data[0]);
