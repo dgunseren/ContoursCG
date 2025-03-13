@@ -57,21 +57,7 @@ public:
         Points.emplace_back(start);
         Points.emplace_back(end);
     }
-    void addSegmentAtIndex(int index, const Segment& segment) {
-        if (index < 0 || index > segments.size()) {
-            std::cerr << "Error: Index out of bounds! Segment not inserted.\n";
-            return;
-        }
 
-        // Insert the segment at the specified index
-        segments.insert(segments.begin() + index, segment);
-
-        // Extract points from the segment and add them to Points vector
-        std::visit([this](auto&& seg) {
-            Points.emplace_back(seg.start);
-            Points.emplace_back(seg.end);
-        }, segment);
-    }
 
 
     bool isValid(double epsilon) const {
@@ -93,6 +79,23 @@ public:
             }
         };
 return true;
+    }
+    void addSegmentAtIndex(int index, const Segment& segment) {
+        // Insert the segment into the segments vector
+        segments.insert(segments.begin() + index, segment);
+
+        // Extract points based on the segment type
+        if (std::holds_alternative<LineSegment>(segment)) {
+            auto& seg = std::get<LineSegment>(segment);
+            Points.insert(Points.begin() + 2*index, seg.start);
+            Points.insert(Points.begin() + 2*index + 1, seg.end);
+        } else if (std::holds_alternative<ArcL>(segment)) {
+            auto& seg = std::get<ArcL>(segment);
+            Points.insert(Points.begin() + 2*index, seg.start);
+            Points.insert(Points.begin() + 2*index + 1, seg.end);
+        }
+
+        std::cout << "Segment inserted at index " << index << ". Total points: " << Points.size() << "\n";
     }
 
 private:
@@ -151,7 +154,9 @@ int main() {
 
     contour1.addLineSegment({11,12},{13,14});
     contour1.addLineSegment({13,14},{17,18});
-    contour1.addArc({17,18},{19,20},5,5,true);
+    contour1.addArc({170,18},{19,20},5,5,true);
+    contour1.addSegmentAtIndex(2,ArcL{{17,18},{170,18}});
+
 
 
     contours.push_back(contour1);
@@ -161,6 +166,7 @@ int main() {
     contour2.addLineSegment({11,12},{13,14});
     contour2.addLineSegment({13,14},{17,18});
     contour2.addArc({170,18},{19,20},5,5,true);
+    contour2.addSegmentAtIndex(2,LineSegment{{17,18},{170,18}});
 
 
     contours.push_back(contour2);
