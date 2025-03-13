@@ -97,6 +97,20 @@ return true;
 
         std::cout << "Segment inserted at index " << index << ". Total points: " << Points.size() << "\n";
     }
+    void removeSegmentAtIndex(int index) {
+        if (index < 0 || index >= segments.size()) {
+            std::cerr << "Error: Index out of bounds! Segment not removed.\n";
+            return;
+        }
+
+        // Remove segment from segments vector
+        segments.erase(segments.begin() + index);
+        Points.erase(Points.begin() + 2*index);
+        Points.erase(Points.begin() + 2*index);
+
+
+
+    }
 
 private:
     std::vector<Segment> segments;
@@ -154,8 +168,9 @@ int main() {
 
     contour1.addLineSegment({11,12},{13,14});
     contour1.addLineSegment({13,14},{17,18});
-    contour1.addArc({170,18},{19,20},5,5,true);
-    contour1.addSegmentAtIndex(2,ArcL{{17,18},{170,18}});
+    contour1.addArc({15,18},{19,20},5,5,true);
+    //contour1.addSegmentAtIndex(2,ArcL{{17,18},{15,19}});
+    contour1.removeSegmentAtIndex(2);
 
 
 
@@ -165,9 +180,10 @@ int main() {
 
     contour2.addLineSegment({11,12},{13,14});
     contour2.addLineSegment({13,14},{17,18});
+    contour2.addArc({17,18},{19,20},5,5,true);
     contour2.addArc({170,18},{19,20},5,5,true);
-    contour2.addSegmentAtIndex(2,LineSegment{{17,18},{170,18}});
-
+    //contour2.addSegmentAtIndex(2,LineSegment{{17,18},{170,18}});
+    contour2.removeSegmentAtIndex(3);
 
     contours.push_back(contour2);
 
